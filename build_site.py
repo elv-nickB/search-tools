@@ -21,7 +21,8 @@ def main():
     tok = edit(args.site, args.config)
     merge_metadata(tok, site_data, args.config)
     if args.finalize:
-        finalize(tok, args.config)
+        print(f"finalizing {tok}")
+        finalize(tok, args.config, args.message)
     else:
         print(f"please finalize: {tok}")
 
@@ -31,6 +32,11 @@ if __name__ == '__main__':
     parser.add_argument("--contents", required=True, type=str)
     parser.add_argument("--config", type=str)
     parser.add_argument("--path", type=str)
-    parser.add_argument("--finalize", action='store_true', type=bool)
+    parser.add_argument("--finalize", action='store_true')
+    parser.add_argument(
+        "--message",
+        type=str,
+        help="commit message",
+    )
     args = parser.parse_args()
     main()
