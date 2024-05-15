@@ -31,6 +31,6 @@ if __name__ == '__main__':
     parser.add_argument("--contents", required=True, type=str)
     parser.add_argument("--config", type=str)
     parser.add_argument("--path", type=str)
-    parser.add_argument("--finalize", type=bool)
+    parser.add_argument("--finalize", action='store_true', type=bool)
     args = parser.parse_args()
     main()
