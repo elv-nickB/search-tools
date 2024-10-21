@@ -3,7 +3,7 @@ import os
 import json
 from tqdm import tqdm
 
-from common import get_client, merge_metadata, finalize, edit, get_metadata, content_info
+from common import *
 
 def get_link(id: str, path: str) -> dict:
     cmd = [get_client(), 'content', 'describe', id, '--config', args.config]
@@ -37,10 +37,15 @@ def main():
                 links[str(i+1)] = link
     site_data = json.dumps({"site_map": {"searchables": links}})
     tok = edit(args.site, args.config)
-    merge_metadata(tok, site_data, args.config)
+    if args.overwrite:
+        set_metadata(tok, json.dumps(links), 'site_map/searchables', args.config)
+    else:
+        merge_metadata(tok, site_data, args.config)
+    if args.message:
+        set_message(tok, args.message, args.config)
     if args.finalize:
         print(f"finalizing {tok}")
-        finalize(tok, args.config, args.message)
+        finalize(tok, args.config)
     else:
         print(f"please finalize: {tok}")
 
@@ -48,9 +53,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--site", required=True, type=str)
     parser.add_argument("--contents", required=False, type=str)
-    parser.add_argument("--config", type=str)
-    parser.add_argument("--path", type=str)
+    parser.add_argument("--config", required=True, type=str)
+    parser.add_argument("--path", required=True, type=str)
     parser.add_argument("--finalize", action='store_true')
+    parser.add_argument("--overwrite", action='store_true')
     parser.add_argument(
         "--message",
         type=str,

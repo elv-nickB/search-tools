@@ -5,7 +5,7 @@ import tempfile
 import time
 from loguru import logger
 
-from common import edit, finalize, get_client
+from common import edit, finalize, get_client, set_message
 
 def crawl(tok: str, config: str) -> None:
     logger.debug(f"Write token: {tok}")
@@ -47,8 +47,11 @@ def main():
     for id in args.ids:
         tok = edit(id, args.config)
         crawl(tok, args.config)
+        if args.message:
+            logger.info(f"Setting message for {tok}")
+            set_message(tok, args.message, args.config)
         if args.finalize:
-            print(finalize(tok, args.config, args.message))
+            print(finalize(tok, args.config))
         else: 
             logger.info(f'please finalize the token {tok}')
 
